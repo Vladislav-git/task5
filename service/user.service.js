@@ -1,7 +1,9 @@
 const {v4 : uuidv4} = require('uuid');
 
 const fs = require('fs');
-
+const fileWrite = (data) => {
+	fs.writeFileSync('./users_db.json', data);
+};
 
 class UsersService {
 
@@ -21,7 +23,8 @@ class UsersService {
 		if (isNameTaken === undefined) {
 			body.id = uuidv4();
 			this.usersList.push(body);
-			return 'user created';
+			fileWrite(JSON.stringify(this.usersList));
+			return this.usersList;
 		} else {
 			return 'this name is already in use';
 		};
@@ -40,7 +43,8 @@ class UsersService {
 					return element;
 				};
 			});
-			return userById ? this.usersList : 'user not found';
+			fileWrite(JSON.stringify(this.usersList));
+			return this.usersList;
 		};
 	};
 
@@ -51,6 +55,7 @@ class UsersService {
 		} else {
 			const index = this.usersList.indexOf(userById, 0);
 			this.usersList.splice(index, 1);
+			fileWrite(JSON.stringify(this.usersList));
 			return this.usersList;
 		};
 	};
